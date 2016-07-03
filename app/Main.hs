@@ -226,7 +226,7 @@ reporterManagerProcess state vmpid = do
           return $ RMS cs (lms',rms)
         else do
           let rms' = Set.delete rpid rms
-          send vmpid $ VMMMembers (Set.size rms) (Set.size rms')
+          send vmpid $ VMMMembers (Set.size lms) (Set.size rms')
           return $ RMS cs (lms,rms')
                      
       p (RMS (lcs,rcs) ms@(lms,_)) _ (RMMCountUp rpid) =
