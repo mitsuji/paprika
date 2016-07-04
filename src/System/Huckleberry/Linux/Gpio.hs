@@ -7,7 +7,7 @@ import System.IO (writeFile, readFile)
 
 
 valueFilePath :: Int -> String
-valueFilePath n = "sys/class/gpio/gpio" ++ (show n) ++ "/value"
+valueFilePath n = "/sys/class/gpio/gpio" ++ (show n) ++ "/value"
 
 
 setValue :: Int -> Bool -> IO ()
