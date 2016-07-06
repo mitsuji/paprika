@@ -1,10 +1,14 @@
 module Main where
 
-import System.IO (hSetEcho,stdin) 
+import System.IO (hSetEcho,hSetBuffering,BufferMode(NoBuffering),stdin,stdout) 
 import Paprikax
 
 main :: IO ()
-main = hSetEcho stdin False >> loop
+main = do
+  hSetBuffering stdin NoBuffering
+  hSetBuffering stdout NoBuffering
+  hSetEcho stdin False
+  loop
   where
     loop = do
       ch <- getChar
