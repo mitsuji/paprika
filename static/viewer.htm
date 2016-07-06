@@ -4,8 +4,42 @@
     <meta charset="UTF-8"/>
     <title>viewer</title>
     <script src="./viewer.js"></script>
+    <link rel="stylesheet" href="./viewer.css"/>
   </head>
   <body>
-    <h2>viewer</h2>
+    
+    <h2 id="title">viewer</h2>
+
+    <div>
+      threshold:
+      <button id="threshold-5">5</button>
+      <button id="threshold-10">10</button>
+      <button id="threshold-20">20</button>
+      <button id="threshold-40">40</button>
+      <button id="threshold-80">80</button>
+      <button id="threshold-100">100</button>
+      <button id="threshold-120">120</button>
+      <button id="threshold-140">140</button>
+    </div>
+    
+    <table class="hist-table">
+      <tr class="hist-caption">
+	<td id="left-members">0 members</td>
+	<td id="right-members">0 members</td>
+      </tr>
+      <tr class="hist-count">
+	<td id="left-counts">0 taps</td>
+	<td id="right-counts">0 taps</td>
+      </tr>
+      <tr class="hist-row">
+	<td class="hist-cell">
+	  <div id="left-hist" class="hist-div" style="height:0%;"></div>
+	</td>
+	<td class="hist-cell">
+	  <div id="right-hist" class="hist-div" style="height:0%;"></div>
+	</td>
+      </tr>
+    </table>
+    
   </body>
 </html>

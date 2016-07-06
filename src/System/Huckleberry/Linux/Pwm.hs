@@ -9,7 +9,7 @@ import System.IO (writeFile, readFile)
 
 
 interfaceFilePath :: Int -> String -> String
-interfaceFilePath n file = "sys/class/pwm/pwmchip0/pwm" ++ (show n) ++ file
+interfaceFilePath n file = "/sys/class/pwm/pwmchip0/pwm" ++ (show n) ++ file
 
 enableFilePath :: Int -> String
 enableFilePath n = interfaceFilePath n "/enable"
