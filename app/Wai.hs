@@ -82,29 +82,29 @@ viewerApp node vmpid rmpid pconn = do
   WS.forkPingThread conn 30
   
   vpid <- forkProcess node $ viewerProcess conn
-  liftIO $ runProcess node $ do
+  runProcess node $ do
     send vmpid (VMMRegistViewer vpid)
     send rmpid (RMMQueryMembers vpid)
     send rmpid (RMMQueryThreshold vpid)
-  loop conn vpid `catch` onerror vpid
+  loop conn vpid `catch` onError vpid
   where
     loop :: WS.Connection -> ProcessId -> IO ()
     loop conn vpid = do
-      msg <- liftIO $ WS.receive conn
+      msg <- WS.receive conn
       case msg of
-        WS.ControlMessage (WS.Close _ _) -> do
-          liftIO $ runProcess node $ do
-            send vmpid (VMMUnregistViewer vpid)
-            send vpid VMClose
+        WS.ControlMessage (WS.Close _ _) -> onClose vpid
+
         WS.DataMessage (WS.Text lbs) -> do
           let thr = read $ T.unpack $ WS.fromLazyByteString lbs
-          liftIO $ runProcess node $ send rmpid $ RMMSetThreshold thr
+          runProcess node $ send rmpid $ RMMSetThreshold thr
           loop conn vpid
         _ -> loop conn vpid
         
-    onerror :: ProcessId -> WS.ConnectionException -> IO ()
-    onerror vpid _ = do
-      liftIO $ runProcess node $ do
+    onError :: ProcessId -> WS.ConnectionException -> IO ()
+    onError vpid _ = onClose vpid
+
+    onClose vpid =
+      runProcess node $ do
         send vmpid (VMMUnregistViewer vpid)
         send vpid VMClose
       
@@ -120,26 +120,25 @@ reporterApp node rmpid pconn = do
   WS.forkPingThread conn 30
   
   rpid <- forkProcess node $ reporterProcess conn
-  liftIO $ runProcess node $ send rmpid (RMMRegistReporter rpid)
-  loop conn rpid `catch` onerror rpid
+  runProcess node $ send rmpid (RMMRegistReporter rpid)
+  loop conn rpid `catch` onError rpid
   where
     loop :: WS.Connection -> ProcessId -> IO ()
     loop conn rpid = do
-      msg <- liftIO $ WS.receive conn
+      msg <- WS.receive conn
       case msg of
-        WS.ControlMessage (WS.Close _ _) -> do
-          liftIO $ runProcess node $ do
-            send rmpid (RMMUnregistReporter rpid)
-            send rpid RMClose
+        WS.ControlMessage (WS.Close _ _) -> onClose rpid
             
         WS.DataMessage (WS.Text _) -> do
-          liftIO $ runProcess node $ send rmpid $ RMMCountUp rpid
+          runProcess node $ send rmpid $ RMMCountUp rpid
           loop conn rpid
         _ -> loop conn rpid
         
-    onerror :: ProcessId -> WS.ConnectionException -> IO ()
-    onerror rpid _ = do
-      liftIO $ runProcess node $ do
+    onError :: ProcessId -> WS.ConnectionException -> IO ()
+    onError rpid _ = onClose rpid
+      
+    onClose rpid = 
+      runProcess node $ do
         send rmpid (RMMUnregistReporter rpid)
         send rpid RMClose
       

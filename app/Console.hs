@@ -24,10 +24,8 @@ main = do
 
 
 {-
-backwardLeft = leftOff >> rightReverse
-backwardRight = leftReverse >> rightOff
-
-turnLeft = leftReverse >> rightOn
-turnRight = leftOn >> rightReverse
+[TODO]
+backwardLeft
+backwardRight
+turnLeft
 -}
-
