@@ -59,15 +59,16 @@ window.addEventListener( 'load', function(event){
     };
 
 
-    for(var i = 0; i < thresholds.length; i++) {
-	var handlerGen = function(thr){
-	    var handler = function(event) {
-		ws.send(thr);
-	    }
-	    return handler;
+    function clickHandlerGen(thr){
+	var handler = function(event) {
+	    ws.send(thr);
 	}
+	return handler;
+    }
+    
+    for(var i = 0; i < thresholds.length; i++) {
 	var thr = thresholds[i];
-	document.getElementById('threshold-' + thr).addEventListener('click', handlerGen(thr));	
+	document.getElementById('threshold-' + thr).addEventListener('click', clickHandlerGen(thr));	
     }
     
 }, false );

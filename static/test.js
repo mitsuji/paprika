@@ -1,8 +1,7 @@
 window.addEventListener( 'load', function(event){
 
     // 30 of takahashi meijin
-    var i;
-    for (i = 0; i<30; i++) {
+    for (var i = 0; i < 30; i++) {
 	takahashi();
     }
     
