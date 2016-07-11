@@ -18,6 +18,7 @@ module Paprikax (
 
 import System.Huckleberry.Linux.Gpio (setValue)
 import Control.Concurrent (threadDelay)
+import Prelude hiding ((!!),(||),(&&))
 
 
 leftOn = setValue 78 True >> setValue 79 False
@@ -44,17 +45,41 @@ turnLeft = leftReverse >> rightOn
 turnRight = leftOn >> rightReverse
 
 
-forward' n = forward >> threadDelay (n * 1000) >> stop
-backward' n = backward >> threadDelay (n * 1000) >> stop
+stop' n = stop >> threadDelay (n * 1000)
 
-forwardLeft' n = forwardLeft >> threadDelay (n * 1000) >> stop
-forwardRight' n = forwardRight >> threadDelay (n * 1000) >> stop
+forward' n = forward >> threadDelay (n * 1000)
+backward' n = backward >> threadDelay (n * 1000)
 
-backwardLeft' n = backwardLeft >> threadDelay (n * 1000) >> stop 
-backwardRight' n = backwardRight >> threadDelay (n * 1000) >> stop
+forwardLeft' n = forwardLeft >> threadDelay (n * 1000)
+forwardRight' n = forwardRight >> threadDelay (n * 1000)
 
-turnLeft' n = turnLeft >> threadDelay (n * 1000) >> stop
-turnRight' n = turnRight >> threadDelay (n * 1000) >> stop
+backwardLeft' n = backwardLeft >> threadDelay (n * 1000)
+backwardRight' n = backwardRight >> threadDelay (n * 1000)
+
+turnLeft' n = turnLeft >> threadDelay (n * 1000)
+turnRight' n = turnRight >> threadDelay (n * 1000)
 
 
-test1 = forward' 2000 >> forwardLeft' 1000 >> forward' 2000 >> forwardRight' 2000 >> forward' 2000 >> turnLeft' 3000
+
+(!!) p n = p >> stop' n
+
+(||) p n = p >> forward' n
+(&&) p n = p >> backward' n
+
+(!|) p n = p >> forwardLeft' n
+(|!) p n = p >> forwardRight' n
+
+(!&) p n = p >> backwardLeft' n
+(&!) p n = p >> backwardRight' n
+
+(&|) p n = p >> turnLeft' n
+(|&) p n = p >> turnRight' n
+
+
+test1 = forward' 2000 >> stop' 2000 >> forward' 2000 >> backward' 2000
+        >> forwardLeft' 2000 >> forwardRight' 2000
+        >> backwardLeft' 2000 >> backwardRight' 2000
+        >> turnLeft' 2000 >> turnRight' 2000 >> stop
+        
+test2 = return () || 2000 !! 2000 || 2000 && 2000 !| 2000 |! 2000 !& 2000 &! 2000 &| 2000 |& 2000 !! 0
+
