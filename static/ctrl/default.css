@@ -1,0 +1,25 @@
+table.ctrl-table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+table.ctrl-table tr td {
+    padding: 10px 10px 10px 10px;
+}
+
+table.ctrl-table tr td input[type="button"] {
+    width: 50px;
+    height: 50px;
+    font-size: 2em;
+}
+
+table.arm-table {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+
+table.arm-table tr td {
+    padding: 0px 20px 0px 20px;
+}
+

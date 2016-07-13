@@ -16,7 +16,7 @@ module Paprikax (
   ,turnRight
   ) where
 
-import System.Huckleberry.Linux.Gpio (setValue)
+import System.PIO.Linux.GPIO (setValue)
 import Control.Concurrent (threadDelay)
 import Prelude hiding ((!!),(||),(&&))
 
@@ -83,3 +83,8 @@ test1 = forward' 2000 >> stop' 2000 >> forward' 2000 >> backward' 2000
         
 test2 = return () || 2000 !! 2000 || 2000 && 2000 !| 2000 |! 2000 !& 2000 &! 2000 &| 2000 |& 2000 !! 0
 
+
+
+-- setValue 1 20000000 320000
+-- setValue 1 20000000 1300000
+-- setValue 1 20000000 2352000

@@ -61,8 +61,8 @@ main = do
 staticApp :: Wai.Application
 staticApp = Static.staticApp $ settings { Static.ssIndices = indices }
   where
---    settings = Static.defaultWebAppSettings "static"
-    settings = Static.embeddedSettings $(embedDir "static")
+--    settings = Static.defaultWebAppSettings "static/cutter"
+    settings = Static.embeddedSettings $(embedDir "static/cutter")
     indices = fromJust $ toPieces ["viewer.htm"] -- default content
 
 
