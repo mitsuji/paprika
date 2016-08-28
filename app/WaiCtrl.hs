@@ -125,8 +125,8 @@ data CtrlCommand = CtrlCommandStop
                  | CtrlCommandBackwardRight
                  | CtrlCommandTurnLeft
                  | CtrlCommandTurnRight
-                 | CtrlCommandLeftArm ArmLevel
-                 | CtrlCommandRightArm ArmLevel
+                 | CtrlCommandLeftArm PX.ArmLevel
+                 | CtrlCommandRightArm PX.ArmLevel
                  deriving (Generic,Typeable)
 
 instance Show CtrlCommand where
@@ -174,9 +174,7 @@ instance FromJSON CtrlCommand where
   parseJSON _ = mzero
 
 
-type ArmLevel = Int
-
-type CtrlManagerState = (Set.Set ProcessId,CtrlCommand,(ArmLevel,ArmLevel))
+type CtrlManagerState = (Set.Set ProcessId,CtrlCommand,(PX.ArmLevel,PX.ArmLevel))
 
 data CtrlManagerMsg = CMMRegistCtrl ProcessId
                     | CMMUnregistCtrl ProcessId
