@@ -14,20 +14,24 @@ module Paprikax (
   ,backwardRight
   ,turnLeft
   ,turnRight
+  ,ArmLevel
+  ,setLeftArm
+  ,setRightArm
   ) where
 
-import System.PIO.Linux.GPIO (setValue)
+import qualified System.PIO.Linux.GPIO as GPIO
+import qualified System.PIO.Linux.PWM as PWM
 import Control.Concurrent (threadDelay)
 import Prelude hiding ((!!),(||),(&&))
 
 
-leftOn = setValue 78 True >> setValue 79 False
-leftOff = setValue 78 False >> setValue 79 False
-leftReverse = setValue 78 False >> setValue 79 True
+leftOn = GPIO.setValue 78 True >> GPIO.setValue 79 False
+leftOff = GPIO.setValue 78 False >> GPIO.setValue 79 False
+leftReverse = GPIO.setValue 78 False >> GPIO.setValue 79 True
 
-rightOn = setValue 80 True >> setValue 81 False
-rightOff = setValue 80 False >> setValue 81 False
-rightReverse = setValue 80 False >> setValue 81 True
+rightOn = GPIO.setValue 80 True >> GPIO.setValue 81 False
+rightOff = GPIO.setValue 80 False >> GPIO.setValue 81 False
+rightReverse = GPIO.setValue 80 False >> GPIO.setValue 81 True
 
 
 stop = leftOff >> rightOff
@@ -76,6 +80,21 @@ turnRight' n = turnRight >> threadDelay (n * 1000)
 (|&) p n = p >> turnRight' n
 
 
+type ArmLevel = Int
+
+setLeftArm :: ArmLevel -> IO ()
+setLeftArm lev
+  | lev ==  1 = PWM.setValue 0 20000000 320000
+  | lev == -1 = PWM.setValue 0 20000000 1300000
+  | otherwise = PWM.setValue 0 20000000 2352000
+                 
+setRightArm :: ArmLevel -> IO ()
+setRightArm lev
+  | lev ==  1 = PWM.setValue 1 20000000 1300000
+  | lev == -1 = PWM.setValue 1 20000000 320000
+  | otherwise = PWM.setValue 1 20000000 2352000
+                
+
 test1 = forward' 2000 >> stop' 2000 >> forward' 2000 >> backward' 2000
         >> forwardLeft' 2000 >> forwardRight' 2000
         >> backwardLeft' 2000 >> backwardRight' 2000
@@ -85,6 +104,3 @@ test2 = return () || 2000 !! 2000 || 2000 && 2000 !| 2000 |! 2000 !& 2000 &! 200
 
 
 
--- setValue 1 20000000 320000
--- setValue 1 20000000 1300000
--- setValue 1 20000000 2352000
