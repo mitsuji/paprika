@@ -48,8 +48,8 @@ import qualified Paprikax as PX
 main :: IO ()
 main = do
   PX.stop
--- [TODO] reset left arm
--- [TODO] reset right arm
+  PX.setLeftArm 0
+  PX.setRightArm 0
   node <- createTransport >>= (\t -> newLocalNode t initRemoteTable)
   cmpid <- forkProcess node $ ctrlManagerProcess (Set.empty,CtrlCommandStop,(0,0))
   host:port:_ <- getArgs
@@ -207,12 +207,12 @@ ctrlManagerProcess state = do
       p (cs,cmd,arm) (CMMUnregistCtrl cpid) = return $ (Set.delete cpid cs,cmd,arm)
                      
       p (cs,cmd,(_,ar)) (CMMSetCommand cmd'@(CtrlCommandLeftArm lev)) = do
-        -- [TODO] left arm
+        liftIO $ PX.setLeftArm lev
         mapM_ (\pid -> send pid $ CMCommand cmd') $ Set.toList cs
         return $ (cs,cmd,(lev,ar))
   
       p (cs,cmd,(al,_)) (CMMSetCommand cmd'@(CtrlCommandRightArm lev)) = do
-        -- [TODO] right arm
+        liftIO $ PX.setRightArm lev
         mapM_ (\pid -> send pid $ CMCommand cmd') $ Set.toList cs
         return $ (cs,cmd,(al,lev))
   

@@ -25,6 +25,19 @@ import Control.Concurrent (threadDelay)
 import Prelude hiding ((!!),(||),(&&))
 
 
+{-
+
+$ sh/setup_pwm.sh 0 1 13  [J18-pin1] out3
+$ sh/setup_pwm.sh 0 2 182 [J17-pin1] out4
+
+$ sh/setup_out.sh 78 [J20-pin11] out6
+$ sh/setup_out.sh 79 [J20-pin12] out5
+$ sh/setup_out.sh 80 [J20-pin13] out1
+$ sh/setup_out.sh 81 [J20-pin14] out2
+
+-}
+
+
 leftOn = GPIO.setValue 78 True >> GPIO.setValue 79 False
 leftOff = GPIO.setValue 78 False >> GPIO.setValue 79 False
 leftReverse = GPIO.setValue 78 False >> GPIO.setValue 79 True
@@ -84,15 +97,15 @@ type ArmLevel = Int
 
 setLeftArm :: ArmLevel -> IO ()
 setLeftArm lev
-  | lev ==  1 = PWM.setValue 0 20000000 320000
-  | lev == -1 = PWM.setValue 0 20000000 1300000
-  | otherwise = PWM.setValue 0 20000000 2352000
+  | lev ==  1 = PWM.setValue 1 20000000 320000
+  | lev == -1 = PWM.setValue 1 20000000 2352000
+  | otherwise = PWM.setValue 1 20000000 1300000
                  
 setRightArm :: ArmLevel -> IO ()
 setRightArm lev
-  | lev ==  1 = PWM.setValue 1 20000000 1300000
-  | lev == -1 = PWM.setValue 1 20000000 320000
-  | otherwise = PWM.setValue 1 20000000 2352000
+  | lev ==  1 = PWM.setValue 2 20000000 2352000
+  | lev == -1 = PWM.setValue 2 20000000 320000
+  | otherwise = PWM.setValue 2 20000000 1300000
                 
 
 test1 = forward' 2000 >> stop' 2000 >> forward' 2000 >> backward' 2000
