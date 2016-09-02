@@ -1,4 +1,4 @@
-module Paprikax (
+module System.Paprika (
   leftOn
   ,leftOff
   ,leftReverse
@@ -27,13 +27,15 @@ import Prelude hiding ((!!),(||),(&&))
 
 {-
 
-$ sh/setup_pwm.sh 0 1 13  [J18-pin1] out3
-$ sh/setup_pwm.sh 0 2 182 [J17-pin1] out4
+$ sh/setup_paprika.sh
 
-$ sh/setup_out.sh 78 [J20-pin11] out6
-$ sh/setup_out.sh 79 [J20-pin12] out5
-$ sh/setup_out.sh 80 [J20-pin13] out1
-$ sh/setup_out.sh 81 [J20-pin14] out2
+[J18-pin1 ] <==> [1.8V <=> 3.3V] <==> [out3]
+[J17-pin1 ] <==> [1.8V <=> 3.3V] <==> [out4]
+
+[J20-pin11] <==> [out6]
+[J20-pin12] <==> [out5]
+[J20-pin13] <==> [out1]
+[J20-pin14] <==> [out2]
 
 -}
 

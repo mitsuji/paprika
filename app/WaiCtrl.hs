@@ -40,16 +40,16 @@ import Data.Binary (Binary)
 import Data.Aeson.Types (ToJSON,toJSON,object,(.=),FromJSON,(.:))
 import qualified Data.Aeson as AE
 
-import qualified Paprikax as PX
+import qualified System.Paprika as PP
 
 
 
 
 main :: IO ()
 main = do
-  PX.stop
-  PX.setLeftArm 0
-  PX.setRightArm 0
+  PP.stop
+  PP.setLeftArm 0
+  PP.setRightArm 0
   node <- createTransport >>= (\t -> newLocalNode t initRemoteTable)
   cmpid <- forkProcess node $ ctrlManagerProcess (Set.empty,CtrlCommandStop,(0,0))
   host:port:_ <- getArgs
@@ -125,8 +125,8 @@ data CtrlCommand = CtrlCommandStop
                  | CtrlCommandBackwardRight
                  | CtrlCommandTurnLeft
                  | CtrlCommandTurnRight
-                 | CtrlCommandLeftArm PX.ArmLevel
-                 | CtrlCommandRightArm PX.ArmLevel
+                 | CtrlCommandLeftArm PP.ArmLevel
+                 | CtrlCommandRightArm PP.ArmLevel
                  deriving (Generic,Typeable)
 
 instance Show CtrlCommand where
@@ -174,7 +174,7 @@ instance FromJSON CtrlCommand where
   parseJSON _ = mzero
 
 
-type CtrlManagerState = (Set.Set ProcessId,CtrlCommand,(PX.ArmLevel,PX.ArmLevel))
+type CtrlManagerState = (Set.Set ProcessId,CtrlCommand,(PP.ArmLevel,PP.ArmLevel))
 
 data CtrlManagerMsg = CMMRegistCtrl ProcessId
                     | CMMUnregistCtrl ProcessId
@@ -207,26 +207,26 @@ ctrlManagerProcess state = do
       p (cs,cmd,arm) (CMMUnregistCtrl cpid) = return $ (Set.delete cpid cs,cmd,arm)
                      
       p (cs,cmd,(_,ar)) (CMMSetCommand cmd'@(CtrlCommandLeftArm lev)) = do
-        liftIO $ PX.setLeftArm lev
+        liftIO $ PP.setLeftArm lev
         mapM_ (\pid -> send pid $ CMCommand cmd') $ Set.toList cs
         return $ (cs,cmd,(lev,ar))
   
       p (cs,cmd,(al,_)) (CMMSetCommand cmd'@(CtrlCommandRightArm lev)) = do
-        liftIO $ PX.setRightArm lev
+        liftIO $ PP.setRightArm lev
         mapM_ (\pid -> send pid $ CMCommand cmd') $ Set.toList cs
         return $ (cs,cmd,(al,lev))
   
       p (cs,_,arm) (CMMSetCommand cmd) = do
         case cmd of
-          CtrlCommandStop          -> liftIO PX.stop
-          CtrlCommandForward       -> liftIO PX.forward
-          CtrlCommandBackward      -> liftIO PX.backward
-          CtrlCommandForwardLeft   -> liftIO PX.forwardLeft
-          CtrlCommandForwardRight  -> liftIO PX.forwardRight
-          CtrlCommandBackwardLeft  -> liftIO PX.backwardLeft
-          CtrlCommandBackwardRight -> liftIO PX.backwardRight
-          CtrlCommandTurnLeft      -> liftIO PX.turnLeft
-          CtrlCommandTurnRight     -> liftIO PX.turnRight
+          CtrlCommandStop          -> liftIO PP.stop
+          CtrlCommandForward       -> liftIO PP.forward
+          CtrlCommandBackward      -> liftIO PP.backward
+          CtrlCommandForwardLeft   -> liftIO PP.forwardLeft
+          CtrlCommandForwardRight  -> liftIO PP.forwardRight
+          CtrlCommandBackwardLeft  -> liftIO PP.backwardLeft
+          CtrlCommandBackwardRight -> liftIO PP.backwardRight
+          CtrlCommandTurnLeft      -> liftIO PP.turnLeft
+          CtrlCommandTurnRight     -> liftIO PP.turnRight
         mapM_ (\pid -> send pid $ CMCommand cmd) $ Set.toList cs
         return $ (cs,cmd,arm)
   

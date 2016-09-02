@@ -1,7 +1,7 @@
 module Main where
 
 import System.IO (hSetEcho,hSetBuffering,BufferMode(NoBuffering),stdin,stdout) 
-import Paprikax
+import System.Paprika
 
 main :: IO ()
 main = do
@@ -13,19 +13,15 @@ main = do
     loop = do
       ch <- getChar
       case ch of
-        's' -> stop >> loop
-        'f' -> forward >> loop
-        'b' -> backward >> loop
-        'l' -> forwardLeft >> loop
-        'r' -> forwardRight >> loop
-        't' -> turnRight >> loop
         'q' -> return ()
-        _   -> loop
+        _   -> do
+          case ch of
+            's' -> stop
+            'f' -> forward
+            'b' -> backward
+            'l' -> forwardLeft
+            'r' -> forwardRight
+            't' -> turnRight
+            _   -> return ()
+          loop
 
-
-{-
-[TODO]
-backwardLeft
-backwardRight
-turnLeft
--}
