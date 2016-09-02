@@ -39,7 +39,7 @@ import Data.Binary (Binary)
 import Data.Aeson.Types (ToJSON,toJSON,object,(.=))
 import qualified Data.Aeson as AE
 
-import Paprikax(leftOn,leftOff,rightOn,rightOff)
+import System.Paprika(leftOn,leftOff,rightOn,rightOff)
 
 
 
