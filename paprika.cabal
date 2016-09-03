@@ -11,8 +11,20 @@ copyright:           2016 Takamasa Mitsuji
 category:            System
 build-type:          Simple
 cabal-version:       >=1.10
--- extra-source-files:
-
+extra-source-files:
+  static/ctrl/default.htm
+  static/ctrl/default.js
+  static/ctrl/default.css
+  static/ctrl/qr.htm
+  static/ctrl/qr.js
+  static/cutter/viewer.htm
+  static/cutter/viewer.js
+  static/cutter/viewer.css
+  static/cutter/reporter.htm
+  static/cutter/reporter.js
+  static/cutter/qr.htm
+  static/cutter/qr.js
+  
 library
   hs-source-dirs:      src
   exposed-modules:     System.Paprika
