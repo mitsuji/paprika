@@ -1,6 +1,6 @@
 name:                paprika
 version:             0.1.0.0
-synopsis:            Haskell library and examples of the kids programming robot paprika
+synopsis:            The Haskell library and examples for the kids programming robot paprika
 description:         Please see README.md
 homepage:            https://github.com/mitsuji/paprika#readme
 license:             BSD3
